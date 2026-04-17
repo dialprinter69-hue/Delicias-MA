@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delicias App</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+
+</head>
+
+<body>
+
+<header>
+<h1>🍰 Delicias</h1>
+</header>
+
+<main>
+
+<section id="menu"></section>
+
+<section id="cart">
+<h2>🛒 Cart</h2>
+<div id="cart-items"></div>
+
+<p id="totals"></p>
+
+</section>
+
+<section class="checkout">
+
+<h3>Customer Info</h3>
+
+<input id="name" placeholder="Name">
+<input id="phone" placeholder="Phone">
+<input id="address" placeholder="City / Address">
+
+<button onclick="sendWhatsApp()">Order via WhatsApp</button>
+<button onclick="payCashApp()">Pay with Cash App</button>
+
+</section>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
