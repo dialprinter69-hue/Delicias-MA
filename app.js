@@ -1,8 +1,8 @@
 const MENU_URL = "https://raw.githubusercontent.com/dialprinter69-hue/delicia-menu/refs/heads/main/menu.json";
 
 let cart = [];
-let deliveryFee = 4;
 let menu = [];
+let deliveryFee = 4;
 
 async function loadMenu() {
 const res = await fetch(MENU_URL);
@@ -12,53 +12,65 @@ menu = data.items;
 deliveryFee = data.delivery_fee || 4;
 
 renderMenu();
-renderCart();
+updateCartBar();
 }
 
 function renderMenu() {
 const menuDiv = document.getElementById("menu");
 menuDiv.innerHTML = "";
 
-menu.forEach(item => {
-
+menu.forEach((item, index) => {
 menuDiv.innerHTML += `
 <div class="card">
-<img src="${item.image}" width="100" />
+<img src="${item.image || 'https://via.placeholder.com/150'}">
 <h3>${item.name}</h3>
 <p>$${item.price}</p>
-<button onclick="addToCart('${item.name}', ${item.price})">
-Add to Cart
+<button id="btn-${index}" onclick="addToCart(${index})">
+Add
 </button>
 </div>
 `;
-
 });
-
 }
 
-function addToCart(name, price) {
-cart.push({ name, price });
-renderCart();
+function addToCart(index) {
+cart.push(menu[index]);
+
+const btn = document.getElementById("btn-" + index);
+btn.innerText = "Added ✓";
+btn.style.background = "#4CAF50";
+
+updateCartBar();
 }
 
-function renderCart() {
-const cartDiv = document.getElementById("cart-items");
-const totalDiv = document.getElementById("totals");
-
-cartDiv.innerHTML = "";
+function updateCartBar() {
+const bar = document.getElementById("cart-bar");
 
 let subtotal = 0;
+cart.forEach(i => subtotal += i.price);
 
-cart.forEach(item => {
-cartDiv.innerHTML += `<p>${item.name} - $${item.price}</p>`;
-subtotal += item.price;
+let total = subtotal + deliveryFee;
+
+bar.innerHTML = `
+🛒 Items: ${cart.length} | Total: $${total}
+<button onclick="checkout()">Checkout</button>
+`;
+}
+
+function checkout() {
+let subtotal = 0;
+let msg = "🍰 New Order:%0A%0A";
+
+cart.forEach(i => {
+msg += `${i.name} - $${i.price}%0A`;
+subtotal += i.price;
 });
 
 let total = subtotal + deliveryFee;
 
-totalDiv.innerHTML = `
-Subtotal: $${subtotal}<br>
-Delivery: $${deliveryFee}<br>
-<b>Total: $${total}</b>
-`;
+msg += `%0ADelivery: $${deliveryFee}%0ATotal: $${total}`;
+
+window.open(`https://wa.me/19786022790?text=${msg}`);
 }
+
+loadMenu();
