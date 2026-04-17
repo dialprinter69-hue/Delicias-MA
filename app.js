@@ -5,41 +5,51 @@ let menu = [];
 let deliveryFee = 4;
 
 async function loadMenu() {
+try {
 const res = await fetch(MENU_URL);
 const data = await res.json();
 
-menu = data.items;
+console.log("MENU DATA:", data);
+
+menu = data.items || [];
 deliveryFee = data.delivery_fee || 4;
 
 renderMenu();
 updateCartBar();
+
+} catch (error) {
+console.error("Error loading menu:", error);
+document.getElementById("menu").innerHTML =
+"<p style='padding:20px'>Error loading menu ❌</p>";
+}
 }
 
 function renderMenu() {
 const menuDiv = document.getElementById("menu");
+
+if (!menuDiv) {
+console.error("MENU DIV NOT FOUND");
+return;
+}
+
 menuDiv.innerHTML = "";
 
 menu.forEach((item, index) => {
+
 menuDiv.innerHTML += `
 <div class="card">
 <img src="${item.image || 'https://via.placeholder.com/150'}">
 <h3>${item.name}</h3>
 <p>$${item.price}</p>
-<button id="btn-${index}" onclick="addToCart(${index})">
-Add
-</button>
+<button onclick="addToCart(${index})">Add</button>
 </div>
 `;
+
 });
 }
 
 function addToCart(index) {
 cart.push(menu[index]);
-
-const btn = document.getElementById("btn-" + index);
-btn.innerText = "Added ✓";
-btn.style.background = "#4CAF50";
-
 updateCartBar();
 }
 
@@ -47,6 +57,7 @@ function updateCartBar() {
 const bar = document.getElementById("cart-bar");
 
 let subtotal = 0;
+
 cart.forEach(i => subtotal += i.price);
 
 let total = subtotal + deliveryFee;
@@ -58,8 +69,8 @@ bar.innerHTML = `
 }
 
 function checkout() {
-let subtotal = 0;
 let msg = "🍰 New Order:%0A%0A";
+let subtotal = 0;
 
 cart.forEach(i => {
 msg += `${i.name} - $${i.price}%0A`;
