@@ -1,7 +1,33 @@
-<div id="menu"></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delicias App</title>
 
-<div id="cart">
-  <h2>Cart</h2>
-  <div id="cart-items"></div>
-  <p id="totals"></p>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+
+</head>
+
+<body>
+
+<header>
+🍰 Delicias
+</header>
+
+<!-- MENU -->
+<main>
+<div id="menu"></div>
+</main>
+
+<!-- CART BAR (FIXED BOTTOM) -->
+<div id="cart-bar">
+🛒 Items: 0 | Total: $0
+<button onclick="checkout()">Checkout</button>
 </div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
