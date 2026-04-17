@@ -1,4 +1,5 @@
-const MENU_URL = "https://raw.githubusercontent.com/dialprinter69-hue/delicia-menu/refs/heads/main/menu.json";
+const MENU_URL =
+"https://raw.githubusercontent.com/dialprinter69-hue/delicia-menu/main/menu.json";
 
 let cart = [];
 let menu = [];
@@ -6,32 +7,36 @@ let deliveryFee = 4;
 
 async function loadMenu() {
 try {
+console.log("Loading menu...");
+
 const res = await fetch(MENU_URL);
+console.log("Status:", res.status);
+
 const data = await res.json();
+console.log("DATA:", data);
 
-console.log("MENU DATA:", data);
+// VALIDACIÓN
+if (!data.items || data.items.length === 0) {
+document.getElementById("menu").innerHTML =
+"<p style='padding:20px'>No items found ❌</p>";
+return;
+}
 
-menu = data.items || [];
+menu = data.items;
 deliveryFee = data.delivery_fee || 4;
 
 renderMenu();
 updateCartBar();
 
-} catch (error) {
-console.error("Error loading menu:", error);
+} catch (err) {
+console.error(err);
 document.getElementById("menu").innerHTML =
-"<p style='padding:20px'>Error loading menu ❌</p>";
+"<p style='padding:20px'>Failed to load menu ❌</p>";
 }
 }
 
 function renderMenu() {
 const menuDiv = document.getElementById("menu");
-
-if (!menuDiv) {
-console.error("MENU DIV NOT FOUND");
-return;
-}
-
 menuDiv.innerHTML = "";
 
 menu.forEach((item, index) => {
